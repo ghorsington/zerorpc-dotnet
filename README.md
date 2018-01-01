@@ -26,7 +26,7 @@ namespace ClientExample
         [MethodDocumentation("Echoes the provided string back")]
         public string Echo(string str)
         {
-            return string;
+            return str;
         }
     }
 
