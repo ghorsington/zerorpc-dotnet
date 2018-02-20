@@ -53,6 +53,7 @@
     <Compile Include="Core\BufferedQueue.cs" />
     <Compile Include="Core\Channel.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="InvokeMethods.cs" />
     <Compile Include="ServiceProviders\SimpleWrapperService.cs" />
     <Compile Include="Util\Clock.cs" />
     <Compile Include="Core\CoreServices.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="IArgumentUnpacker.cs" />
     <Compile Include="Data\ErrorInformation.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="RemoteException.cs" />
     <Compile Include="Util\SerializerUtils.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Core\ServerChannel.cs" />

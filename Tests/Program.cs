@@ -73,13 +73,14 @@ namespace Tests
     {
         private static void Main(string[] args)
         {
-            Server s = new Server(new SimpleWrapperService<TestObject>(new TestObject()));
-            s.Bind("tcp://127.0.0.1:1234");
-            Console.WriteLine("Server started");
-            s.Error += (sender, errorArgs) => { Console.WriteLine($"Error: {errorArgs.Info}"); };
-            Console.Read();
-            Console.WriteLine("Closing");
-            s.Dispose();
+            //Server s = new Server(new SimpleWrapperService<TestObject>(new TestObject()));
+            //s.Bind("tcp://127.0.0.1:1234");
+            //Console.WriteLine("Server started");
+            //s.Error += (sender, errorArgs) => { Console.WriteLine($"Error: {errorArgs.Info}"); };
+            //Console.Read();
+            //Console.WriteLine("Closing");
+            //s.Dispose();
+            TestSync();
         }
 
         private static void TestServer()
@@ -93,13 +94,12 @@ namespace Tests
             s.Dispose();
         }
 
-
         private static void TestClient()
         {
             Client c = new Client(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(3));
             c.Error += (sender, errorArgs) => { Console.WriteLine($"Error: {errorArgs.Info}"); };
             c.Connect("tcp://127.0.0.1:1234");
-            c.InvokeAsync("asd",
+            c.InvokeAsync("strftime",
                           new object[] {"%Y/%m/%d"},
                           (error, result, stream) =>
                           {
@@ -108,6 +108,44 @@ namespace Tests
             c.InvokeAsync("clock",
                           new object[0],
                           (e, r, s) => { Console.WriteLine($"Error: {e}, result: {r} (type: {r?.GetType()}), stream: {s}"); });
+        }
+
+        private static void TestSync()
+        {
+            Client c = new Client(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(3));
+            c.Error += (sender, errorArgs) => { Console.WriteLine($"Error: {errorArgs.Info}"); };
+            c.Connect("tcp://127.0.0.1:1234");
+
+            string s = c.Invoke<string>("strftime", "%Y/%m/%d");
+            Console.WriteLine($"Got time: {s}");
+
+            Console.WriteLine("Fail test:");
+            try
+            {
+                c.Invoke("asd", "%Y/%m/%d");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            var clock = c.CreateDelegate<double>("clock");
+            double t = 0;
+            double prevTime = -1;
+            for (int i = 0; i < 10; i++)
+            {
+                double cc = clock();
+                if (prevTime > 0)
+                    t += cc - prevTime;
+                prevTime = cc;
+                Console.WriteLine($"Clock {i + 1}: {cc}");
+            }
+
+            Console.WriteLine($"Average wait: {t / 9} seconds");
+
+            c.Dispose();
+            Console.WriteLine("Done");
+            Console.ReadKey();
         }
     }
 }

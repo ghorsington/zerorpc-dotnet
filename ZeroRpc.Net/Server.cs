@@ -85,7 +85,7 @@ namespace ZeroRpc.Net
                 else
                 {
                     if (isFirst && !more)
-                        ch.Send("OK", new object[] {new[] {value}}); // Wrap into an array for backwards compatibility
+                        ch.Send("OK", value);
                     else if (value != null)
                         ch.Send("STREAM", value);
 

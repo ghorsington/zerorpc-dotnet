@@ -17,20 +17,13 @@ namespace ZeroRpc.Net.Util
             serializer = MessagePackSerializer.Get<object[]>();
         }
 
-        public static IList<MessagePackObject> Serialize(object[] args)
-        {
-            return serializer.ToMessagePackObject(args).AsList();
-        }
+        public static IList<MessagePackObject> Serialize(object[] args) =>
+                serializer.ToMessagePackObject(args).AsList();
 
         public static NetMQMessage Serialize(Event evt)
         {
             NetMQMessage message = new NetMQMessage();
-            object args;
-            if (evt.Args.Count == 1)
-                args = evt.Args[0];
-            else
-                args = evt.Args;
-            object[] payload = {evt.Header, evt.Name, args};
+            object[] payload = {evt.Header, evt.Name, evt.Args};
 
             if (evt.Envelope != null)
                 foreach (byte[] frame in evt.Envelope)
@@ -56,21 +49,23 @@ namespace ZeroRpc.Net.Util
 
             EventHeader headerObj = new EventHeader
             {
-                Version = header["v"].AsInt32(),
-                MessageId = ProcessUuid(header, "message_id"),
-                ResponseTo = ProcessUuid(header, "response_to")
+                    Version = header["v"].AsInt32(),
+                    MessageId = ProcessUuid(header, "message_id"),
+                    ResponseTo = ProcessUuid(header, "response_to")
             };
 
-            Event msg = new Event {Envelope = envelope, Header = headerObj, Name = parts[1].AsString(), Args = parts[2].AsList()};
+            Event msg = new Event
+            {
+                    Envelope = envelope,
+                    Header = headerObj,
+                    Name = parts[1].AsString(),
+                    Args = parts[2].AsList()
+            };
 
             return msg;
         }
 
-        private static object ProcessUuid(MessagePackObjectDictionary dic, string value)
-        {
-            if (!dic.TryGetValue(value, out var uuid))
-                return string.Empty;
-            return uuid.ToObject();
-        }
+        private static object ProcessUuid(MessagePackObjectDictionary dic, string value) =>
+                !dic.TryGetValue(value, out MessagePackObject uuid) ? string.Empty : uuid.ToObject();
     }
 }
