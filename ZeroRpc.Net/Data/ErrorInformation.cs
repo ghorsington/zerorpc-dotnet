@@ -37,9 +37,9 @@
         ///     Converts the error information into an array that can be serialized through Msgpack.
         /// </summary>
         /// <returns>A string array representation of the error information.</returns>
-        public string[] ToArray()
+        public object[] ToArray()
         {
-            return new[] {Name, Message, StackTrace};
+            return new object[] {Name, Message, StackTrace};
         }
 
         /// <inheritdoc />

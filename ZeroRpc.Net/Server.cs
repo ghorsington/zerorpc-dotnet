@@ -117,7 +117,7 @@ namespace ZeroRpc.Net
 
         private void SendError(Channel ch, ErrorInformation info)
         {
-            ch.Send("ERR", new object[] {info.ToArray()});
+            ch.Send("ERR", info.ToArray());
             CloseChannel(ch);
         }
     }
