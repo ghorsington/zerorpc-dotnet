@@ -47,6 +47,11 @@ namespace Tests
             return value.ToString();
         }
 
+        public void OptionalTest(bool val = false)
+        {
+            Console.WriteLine($"Got value: {val}");
+        }
+
         [MethodDocumentation(
             "Converts the provided float to the specified format and culture.\n\nBy default, the format is 'N' and culture is 'current'.\nValid cultures are 'current' and 'invariant' and any kind of specific culture identifier.")]
         public string Echo(double value, string format = "N", string culture = "current")
@@ -73,14 +78,18 @@ namespace Tests
     {
         private static void Main(string[] args)
         {
-            //Server s = new Server(new SimpleWrapperService<TestObject>(new TestObject()));
-            //s.Bind("tcp://127.0.0.1:1234");
-            //Console.WriteLine("Server started");
-            //s.Error += (sender, errorArgs) => { Console.WriteLine($"Error: {errorArgs.Info}"); };
-            //Console.Read();
-            //Console.WriteLine("Closing");
-            //s.Dispose();
-            TestSync();
+            TestService();
+        }
+
+        private static void TestService()
+        {
+            Server s = new Server(new SimpleWrapperService<TestObject>(new TestObject()));
+            s.Bind("tcp://127.0.0.1:1234");
+            Console.WriteLine("Server started");
+            s.Error += (sender, errorArgs) => { Console.WriteLine($"Error: {errorArgs.Info}"); };
+            Console.Read();
+            Console.WriteLine("Closing");
+            s.Dispose();
         }
 
         private static void TestServer()

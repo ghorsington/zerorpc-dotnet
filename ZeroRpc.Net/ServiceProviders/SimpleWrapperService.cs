@@ -89,7 +89,7 @@ namespace ZeroRpc.Net.ServiceProviders
                 {
                     passArgs = new object[data.parameters.Length];
                     for (int i = 0; i < passArgs.Length; i++)
-                        passArgs[i] = i < args.Length ? args[i] : Type.Missing;
+                        passArgs[i] = i < args.Length ? args[i] : data.parameters[i].DefaultValue;
                 }
 
                 object instance = data.method.IsStatic ? null : (object) ServiceImplementor;
