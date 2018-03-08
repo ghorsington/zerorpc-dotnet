@@ -89,6 +89,7 @@ namespace Tests
             s.Error += (sender, errorArgs) => { Console.WriteLine($"Error: {errorArgs.Info}"); };
             Console.Read();
             Console.WriteLine("Closing");
+            s.Close(TimeSpan.Zero);
             s.Dispose();
         }
 

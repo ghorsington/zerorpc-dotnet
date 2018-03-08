@@ -37,8 +37,14 @@ namespace ZeroRpc.Net.Core
             Socket = socket;
             TimerPoller = new TimerPoller();
 
-            Proactor = new NetMQProactor(socket, ReceiveMessage);
+            Poller = new NetMQPoller
+            {
+                    Socket
+            };
+            Socket.ReceiveReady += ReceiveMessage;
+
             TimerPoller.Start();
+            Poller.RunAsync();
         }
 
         /// <summary>
@@ -64,7 +70,19 @@ namespace ZeroRpc.Net.Core
         internal TimerPoller TimerPoller { get; }
 
         private Dictionary<object, Channel> Channels { get; }
-        private NetMQProactor Proactor { get; }
+        private NetMQPoller Poller { get; }
+
+        ~SocketBase()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        ///     Fired when an error occurs during work.
+        /// </summary>
+        public event EventHandler<ErrorArgs> Error;
+
+        internal event EventHandler<EventReceivedArgs> EventReceived;
 
         /// <summary>
         ///     Closes and disposes of the socket and any related resources.
@@ -74,11 +92,6 @@ namespace ZeroRpc.Net.Core
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        /// <summary>
-        ///     Fired when an error occurs during work.
-        /// </summary>
-        public event EventHandler<ErrorArgs> Error;
 
         /// <summary>
         ///     Terminates all active connections, sends out all remaining data and closes the socket.
@@ -92,7 +105,9 @@ namespace ZeroRpc.Net.Core
             if (linger != TimeSpan.Zero)
                 Socket.Options.Linger = linger;
 
-            Proactor.Dispose();
+            Socket.ReceiveReady -= ReceiveMessage;
+            Poller.StopAsync();
+            TimerPoller.Stop();
             Socket.Close();
             foreach (KeyValuePair<object, Channel> pair in Channels)
                 pair.Value.Destroy();
@@ -125,7 +140,13 @@ namespace ZeroRpc.Net.Core
         /// <param name="info">Information about the error.</param>
         protected void RaiseError(ErrorInformation info)
         {
-            Error?.BeginInvoke(this, new ErrorArgs {Info = info}, null, null);
+            Error?.BeginInvoke(this,
+                               new ErrorArgs
+                               {
+                                       Info = info
+                               },
+                               null,
+                               null);
         }
 
         /// <summary>
@@ -142,10 +163,10 @@ namespace ZeroRpc.Net.Core
         protected virtual void Dispose(bool disposing)
         {
             ReleaseUnmanagedResources();
-            if (disposing && !Closed)
+            if (disposing)
             {
-                Proactor?.Dispose();
-                Socket?.Dispose();
+                Socket.Dispose();
+                Poller.Dispose();
             }
         }
 
@@ -154,8 +175,6 @@ namespace ZeroRpc.Net.Core
             NetMQMessage message = SerializerUtils.Serialize(evt);
             Socket.SendMultipartMessage(message);
         }
-
-        internal event EventHandler<EventReceivedArgs> EventReceived;
 
         internal abstract Channel CreateChannel(Event srcEvent);
 
@@ -178,13 +197,16 @@ namespace ZeroRpc.Net.Core
             Channels.Remove(channel.Id);
         }
 
-        private void ReceiveMessage(NetMQSocket socket, NetMQMessage message)
+        private void ReceiveMessage(object sender, NetMQSocketEventArgs args)
         {
+            NetMQMessage message = args.Socket.ReceiveMultipartMessage();
+
             if (message[message.FrameCount - 2].MessageSize != 0)
             {
                 RaiseError("ProtocolError", "Invalid event: Second to last argument must be an empty buffer!");
                 return;
             }
+
             List<byte[]> envelope = message.Take(message.FrameCount - 2).Select(n => n.ToByteArray()).ToList();
 
             Event evt;
@@ -202,18 +224,19 @@ namespace ZeroRpc.Net.Core
             if (Channels.TryGetValue(evt.Header.ResponseTo, out Channel ch))
                 ch.ProcessAsync(evt);
             else
-                EventReceived?.BeginInvoke(this, new EventReceivedArgs {Event = evt}, null, null);
+                EventReceived?.BeginInvoke(this,
+                                           new EventReceivedArgs
+                                           {
+                                                   Event = evt
+                                           },
+                                           null,
+                                           null);
         }
 
         private void ReleaseUnmanagedResources()
         {
             TimerPoller.Stop();
             Close(TimeSpan.Zero);
-        }
-
-        ~SocketBase()
-        {
-            Dispose(false);
         }
     }
 }
