@@ -72,6 +72,20 @@ namespace ZeroRpc.Net
         }
 
         /// <summary>
+        ///     A handy method for calling <see cref="Client.InvokeAsync"/> without a callback handler.
+        ///     <p>
+        ///         Use it when you don't need to know whether an async call succeeded.
+        ///     </p>
+        /// </summary>
+        /// <param name="client">Client that will invoke the method.</param>
+        /// <param name="method">Method name.</param>
+        /// <param name="args">Arguments of the method.</param>
+        public static void InvokeAsync(this Client client, string method, params object[] args)
+        {
+            client.InvokeAsync(method, args, null);
+        }
+
+        /// <summary>
         ///     Create a delegate for a remote method.
         /// </summary>
         /// <typeparam name="T">Type of the return value.</typeparam>

@@ -89,7 +89,7 @@ namespace ZeroRpc.Net
                             RaiseError("ProtocolError", "Invalid event: Bad error");
                             return;
                         }
-                        callback.BeginInvoke(new ErrorInformation(data[0].AsString(), data[1].AsString(), data[2].AsString()),
+                        callback?.BeginInvoke(new ErrorInformation(data[0].AsString(), data[1].AsString(), data[2].AsString()),
                                              null,
                                              false,
                                              null,
@@ -113,7 +113,7 @@ namespace ZeroRpc.Net
                         break;
                 }
             };
-            ch.Error += (sender, args) => callback.BeginInvoke(args.Info, null, false, null, null);
+            ch.Error += (sender, args) => callback?.BeginInvoke(args.Info, null, false, null, null);
 
             ch.StartTimeoutWatch(timeout,
                                  () =>
