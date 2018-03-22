@@ -106,7 +106,7 @@ namespace ZeroRpc.Net.Core
                 Socket.Options.Linger = linger;
 
             Socket.ReceiveReady -= ReceiveMessage;
-            Poller.Stop();
+            Poller.StopAsync();
             TimerPoller.Stop();
             Socket.Close();
             foreach (KeyValuePair<object, Channel> pair in Channels)
@@ -165,8 +165,15 @@ namespace ZeroRpc.Net.Core
             ReleaseUnmanagedResources();
             if (disposing)
             {
-                Socket.Dispose();
-                Poller.Dispose();
+                try
+                {
+                    Socket.Dispose();
+                    Poller.Dispose();
+                }
+                catch (Exception)
+                {
+                    // TODO: Maybe better disposal checking?
+                }
             }
         }
 
