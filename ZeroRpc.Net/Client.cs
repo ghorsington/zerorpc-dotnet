@@ -97,18 +97,18 @@ namespace ZeroRpc.Net
                         CloseChannel(ch);
                         break;
                     case "OK":
-                        callback.BeginInvoke(null, ArgumentUnpacker.Unpack(args.Event.Args[0]), false, null, null);
+                        callback?.BeginInvoke(null, ArgumentUnpacker.Unpack(args.Event.Args[0]), false, null, null);
                         CloseChannel(ch);
                         break;
                     case "STREAM":
-                        callback.BeginInvoke(null, ArgumentUnpacker.Unpack(args.Event.Args), true, null, null);
+                        callback?.BeginInvoke(null, ArgumentUnpacker.Unpack(args.Event.Args), true, null, null);
                         break;
                     case "STREAM_DONE":
-                        callback.BeginInvoke(null, null, false, null, null);
+                        callback?.BeginInvoke(null, null, false, null, null);
                         CloseChannel(ch);
                         break;
                     default:
-                        callback.BeginInvoke(new ErrorInformation("ProtocolError", "Invalid event: unknown name"), null, false, null, null);
+                        callback?.BeginInvoke(new ErrorInformation("ProtocolError", "Invalid event: unknown name"), null, false, null, null);
                         CloseChannel(ch);
                         break;
                 }

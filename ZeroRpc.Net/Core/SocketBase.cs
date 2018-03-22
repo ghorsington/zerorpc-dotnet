@@ -106,7 +106,7 @@ namespace ZeroRpc.Net.Core
                 Socket.Options.Linger = linger;
 
             Socket.ReceiveReady -= ReceiveMessage;
-            Poller.StopAsync();
+            Poller.Stop();
             TimerPoller.Stop();
             Socket.Close();
             foreach (KeyValuePair<object, Channel> pair in Channels)
@@ -235,7 +235,6 @@ namespace ZeroRpc.Net.Core
 
         private void ReleaseUnmanagedResources()
         {
-            TimerPoller.Stop();
             Close(TimeSpan.Zero);
         }
     }

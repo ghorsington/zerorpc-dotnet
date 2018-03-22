@@ -78,7 +78,17 @@ namespace Tests
     {
         private static void Main(string[] args)
         {
-            TestService();
+            //TestService();
+            Client c = new Client();
+            c.Connect("tcp://127.0.0.1:1234");
+            c.InvokeAsync("emit", "asd", new Dictionary<string, object>
+            {
+                    ["test"] = "test",
+                    ["val"] = 12
+            });
+
+            Console.ReadLine();
+            c.Dispose();
         }
 
         private static void TestService()
