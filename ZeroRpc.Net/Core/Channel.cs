@@ -79,10 +79,14 @@ namespace ZeroRpc.Net.Core
 
         public void Destroy()
         {
-            state = ChannelState.Closed;
+            heartbeatTimer.Enabled = false;
             socket.TimerPoller.Remove(heartbeatTimer);
+            state = ChannelState.Closed;
             if (timeoutTimer != null)
+            {
+                timeoutTimer.Enabled = false;
                 socket.TimerPoller.Remove(timeoutTimer);
+            }
             Closed?.Invoke(null, new ClosingArgs {Channel = this});
         }
 
