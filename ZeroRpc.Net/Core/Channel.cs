@@ -98,7 +98,7 @@ namespace ZeroRpc.Net.Core
                 outBuffer.ReduceCapacity();
             }
 
-            if (state == ChannelState.Closing && outBuffer.Count == 0)
+            if (state == ChannelState.Closing)
             {
                 Destroy();
                 socket.RemoveClosedChannel(this);
@@ -213,7 +213,8 @@ namespace ZeroRpc.Net.Core
                     socket.RemoveClosedChannel(this);
                     return;
                 }
-
+                if (state != ChannelState.Open)
+                    return; // Don't heartbeat closing connections; we just want to flush everything and be done with it
                 try
                 {
                     Event evt = new Event
