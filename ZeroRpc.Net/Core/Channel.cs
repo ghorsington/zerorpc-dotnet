@@ -79,7 +79,6 @@ namespace ZeroRpc.Net.Core
 
         public void Destroy()
         {
-            heartbeatTimer.Enabled = false;
             socket.TimerPoller.Remove(heartbeatTimer);
             state = ChannelState.Closed;
             if (timeoutTimer != null)

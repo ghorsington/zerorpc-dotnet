@@ -6,10 +6,17 @@ Current version of ZeroRPC.NET supports .NET Framework 3.5 and zerorpc version 3
 
 The API and core logic were mimicked off [zerorpc-node](https://github.com/0rpc/zerorpc-node), but modified to work within .NET.
 
+## Features
+
+* Supports .NET 3.5 and Unity
+* Simple API for zeroservices through `IService` interface
+* Replaceable paramter/return value (de)serializer
+* Synchronous method invoking w/ first-class exceptions
+* Asynchronous invoking through callbacks
+
 ## Current progress
 
 As of right now, the library is in early beta stage: no official release is available, some useful client-side extensions are missing and not everything has been tested properly yet. However, the library is capable of successfully communicating with zeroservices written in both Python and Node.JS.
-
 
 ## Basic example
 
@@ -30,7 +37,7 @@ namespace ClientExample
         }
     }
 
-    public class ServerShowcae
+    public class ServerShowcase
     {
         public static void Main(string[] args) 
         {
@@ -76,20 +83,16 @@ namespace ClientExample
             // Connect to a local zeroservice on port 1234 through TCP
             c.Connect("tcp://127.0.0.1:1234");
 
-            // Currently client supports only direct async calls
-            // More convenience methods to simplify the task will come in future versions
-            c.InvokeAsync("Echo", 
-                          new object[] { "Hello, world!" },
-                          (error, result, hasMore) => 
-                          {
-                              if(error != null)
-                                  Console.WriteLine(error);
-                              else
-                                  Console.WriteLine(result);
-                          });
+            // Supports simple synchronous calls with first class exceptions
 
-            // Prevent the console from closing, since InvokeAsync returns immediately
-            Console.ReadKey();
+            try 
+            {
+                Console.WriteLine(c.Invoke<string>("Echo", "Hello, world!"));
+            } catch (RemoteException re) 
+            {
+                Console.WriteLine($"Error: {re.ErrorName}");
+                Console.WriteLine($"Remote stack trace: {re.RemoteStackTrace}");
+            }
 
             // Dispose of the client in the end.
             c.Dispose();
