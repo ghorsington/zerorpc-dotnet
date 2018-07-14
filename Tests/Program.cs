@@ -80,17 +80,13 @@ namespace Tests
         {
             //TestService();
             Client c = new Client();
-            c.Connect("tcp://127.0.0.1:1234");
+            c.Connect("tcp://127.0.0.1:8899");
+
+
+            Console.ReadLine();
 
             Console.WriteLine(c.Invoke<string>("Echo", "Hello, world!"));
 
-            c.InvokeAsync("emit", "asd", new Dictionary<string, object>
-            {
-                    ["test"] = "test",
-                    ["val"] = 12
-            });
-
-            Console.ReadLine();
             c.Dispose();
         }
 

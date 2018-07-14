@@ -228,7 +228,7 @@ namespace ZeroRpc.Net.Core
                 return;
             }
 
-            if (Channels.TryGetValue(evt.Header.ResponseTo, out Channel ch))
+            if (evt.Header.ResponseTo != null && Channels.TryGetValue(evt.Header.ResponseTo, out Channel ch))
                 ch.ProcessAsync(evt);
             else
                 EventReceived?.BeginInvoke(this,
