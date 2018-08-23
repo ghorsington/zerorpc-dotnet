@@ -1,5 +1,7 @@
 # ZeroRPC.NET
 
+[![Build status](https://ci.appveyor.com/api/projects/status/i8e6i0iegbrdi0jc?svg=true)](https://ci.appveyor.com/project/denikson/zerorpc-dotnet)
+
 ZeroRPC.NET is a 100% CIL implementation of [zerorpc](http://www.zerorpc.io/), a simple library for communication and Remote Procedure Calls between distributed processes.
 
 Current version of ZeroRPC.NET supports .NET Framework 3.5 and zerorpc version 3.
