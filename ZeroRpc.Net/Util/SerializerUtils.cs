@@ -65,7 +65,27 @@ namespace ZeroRpc.Net.Util
             return msg;
         }
 
-        private static object ProcessUuid(MessagePackObjectDictionary dic, string value) =>
-                !dic.TryGetValue(value, out MessagePackObject uuid) ? string.Empty : uuid.ToObject();
+        private static object ProcessUuid(MessagePackObjectDictionary dic, string value)
+        {
+            bool hasUuid = dic.TryGetValue(value, out MessagePackObject uuid);
+
+            if (hasUuid)
+            {
+                object o = uuid.ToObject();
+                if (o is System.Byte[])
+                {
+                    string UuidStr = System.Text.Encoding.ASCII.GetString((byte[])uuid.ToObject());
+                    return UuidStr;
+                }
+                else
+                {
+                    return o;
+                }
+            }
+            else
+                return string.Empty;
+
+        }
+
     }
 }
