@@ -78,7 +78,7 @@ namespace ClientExample
             Client c = new Client();
 
             // Most errors are fired asynchronously as to not prevent the main data flow
-            c.Error += (s, args) => Console.WriteLine(errorArgs.Info);
+            c.Error += (s, errorArgs) => Console.WriteLine(errorArgs.Info);
 
             // Connect to a local zeroservice on port 1234 through TCP
             c.Connect("tcp://127.0.0.1:1234");
