@@ -1,6 +1,5 @@
 ﻿using System;
 using ZeroRpc.Net.Data;
-using ZeroRpc.Net.Util;
 
 namespace ZeroRpc.Net.Core
 {
@@ -9,10 +8,10 @@ namespace ZeroRpc.Net.Core
         private bool isFresh;
 
         public ClientChannel(object id, SocketBase socket, int capacity, TimeSpan hearbeatInterval) : base(id,
-                                                                                                null,
-                                                                                                socket,
-                                                                                                capacity,
-                                                                                                hearbeatInterval)
+                                                                                                           null,
+                                                                                                           socket,
+                                                                                                           capacity,
+                                                                                                           hearbeatInterval)
         {
             isFresh = true;
         }

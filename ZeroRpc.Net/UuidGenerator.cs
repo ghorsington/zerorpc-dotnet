@@ -4,7 +4,7 @@ using System.Text;
 namespace ZeroRpc.Net
 {
     /// <summary>
-    /// A basic default UUID generator
+    ///     A basic default UUID generator
     /// </summary>
     public static class UuidGenerator
     {
@@ -17,7 +17,7 @@ namespace ZeroRpc.Net
         }
 
         /// <summary>
-        /// Generate next unique 16-byte UUID and format it as a 32-character hex string.
+        ///     Generate next unique 16-byte UUID and format it as a 32-character hex string.
         /// </summary>
         /// <returns>A 32 character-long UUID that can be used to identify a message.</returns>
         public static string NextUuid()
@@ -28,9 +28,12 @@ namespace ZeroRpc.Net
         }
 
         /// <summary>
-        /// Generate next unique 16-byte UUID and encode it as a byte array.
+        ///     Generate next unique 16-byte UUID and encode it as a byte array.
         /// </summary>
         /// <returns>A 32-element byte array that contains an UUID that can be used to identify a message.</returns>
-        public static byte[] NextUuidBytes() => Encoding.ASCII.GetBytes(NextUuid());
+        public static byte[] NextUuidBytes()
+        {
+            return Encoding.ASCII.GetBytes(NextUuid());
+        }
     }
 }

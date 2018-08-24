@@ -5,7 +5,7 @@ using System.Linq;
 namespace ZeroRpc.Net
 {
     /// <summary>
-    /// A basic message ID comparer that can compare both byte[] and string IDs.
+    ///     A basic message ID comparer that can compare both byte[] and string IDs.
     /// </summary>
     public class MessageIdComparer : IEqualityComparer<object>
     {

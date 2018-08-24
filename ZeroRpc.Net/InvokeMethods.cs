@@ -34,7 +34,7 @@ namespace ZeroRpc.Net
         /// <returns>Remote call's return value.</returns>
         public static T Invoke<T>(this Client client, string method, params object[] args)
         {
-            ManualResetEvent mre = new ManualResetEvent(false);
+            var mre = new ManualResetEvent(false);
 
             ErrorInformation errorInfo = null;
             object resultObj = null;
@@ -72,7 +72,7 @@ namespace ZeroRpc.Net
         }
 
         /// <summary>
-        ///     A handy method for calling <see cref="Client.InvokeAsync"/> without a callback handler.
+        ///     A handy method for calling <see cref="Client.InvokeAsync" /> without a callback handler.
         ///     <p>
         ///         Use it when you don't need to know whether an async call succeeded.
         ///     </p>
@@ -94,7 +94,11 @@ namespace ZeroRpc.Net
         /// <returns>A <see cref="RemoteMethod{T}" /> that will call <see cref="Invoke{T}" /> on the provided arguments.</returns>
         public static RemoteMethod<T> CreateDelegate<T>(this Client client, string method)
         {
-            T Result(object[] args) => Invoke<T>(client, method, args);
+            T Result(object[] args)
+            {
+                return Invoke<T>(client, method, args);
+            }
+
             return Result;
         }
 

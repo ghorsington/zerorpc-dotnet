@@ -88,6 +88,7 @@ namespace ZeroRpc.Net.Core
                 {
                     currTimers = timers.ToArray();
                 }
+
                 foreach (Timer timer in currTimers)
                     if (timer.Enabled)
                     {

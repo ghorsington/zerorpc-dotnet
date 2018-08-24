@@ -34,7 +34,7 @@ namespace ZeroRpc.Net
         /// <returns>An array of unpacked objects.</returns>
         public static object[] Unpack(this IArgumentUnpacker self, IList<MessagePackObject> list)
         {
-            object[] result = new object[list.Count];
+            var result = new object[list.Count];
 
             for (int i = 0; i < list.Count; i++)
                 result[i] = self.Unpack(list[i]);

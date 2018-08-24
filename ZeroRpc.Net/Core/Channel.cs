@@ -24,12 +24,12 @@ namespace ZeroRpc.Net.Core
     }
 
     /// <summary>
-    /// Error information.
+    ///     Error information.
     /// </summary>
     public class ErrorArgs : EventArgs
     {
         /// <summary>
-        /// Information about the error.
+        ///     Information about the error.
         /// </summary>
         public ErrorInformation Info { get; internal set; }
     }
@@ -92,6 +92,7 @@ namespace ZeroRpc.Net.Core
                 timeoutTimer.Enabled = false;
                 socket.TimerPoller.Remove(timeoutTimer);
             }
+
             Closed?.Invoke(null, new ClosingArgs {Channel = this});
         }
 
@@ -139,7 +140,7 @@ namespace ZeroRpc.Net.Core
             if (state != ChannelState.Open)
                 throw new Exception("Channel is closed!");
 
-            Event evt = new Event {Envelope = envelope, Header = CreateHeader(), Name = evtName, Args = SerializerUtils.Serialize(args)};
+            var evt = new Event {Envelope = envelope, Header = CreateHeader(), Name = evtName, Args = SerializerUtils.Serialize(args)};
 
             if (outBuffer.HasCapacity)
             {
@@ -209,8 +210,8 @@ namespace ZeroRpc.Net.Core
                     Error?.BeginInvoke(this,
                                        new ErrorArgs
                                        {
-                                           Info = new ErrorInformation("HeartbeatError",
-                                                                       $"Lost remote after {hearbeatInterval.TotalMilliseconds} ms")
+                                               Info = new ErrorInformation("HeartbeatError",
+                                                                           $"Lost remote after {hearbeatInterval.TotalMilliseconds} ms")
                                        },
                                        null,
                                        null);
@@ -218,16 +219,17 @@ namespace ZeroRpc.Net.Core
                     socket.RemoveClosedChannel(this);
                     return;
                 }
+
                 if (state != ChannelState.Open)
                     return; // Don't heartbeat closing connections; we just want to flush everything and be done with it
                 try
                 {
-                    Event evt = new Event
+                    var evt = new Event
                     {
-                        Envelope = envelope,
-                        Header = CreateHeader(),
-                        Name = "_zpc_hb",
-                        Args = new List<MessagePackObject>()
+                            Envelope = envelope,
+                            Header = CreateHeader(),
+                            Name = "_zpc_hb",
+                            Args = new List<MessagePackObject>()
                     };
                     socket.Send(evt);
                 }
@@ -253,12 +255,12 @@ namespace ZeroRpc.Net.Core
 
             if (newCapacity > 0)
             {
-                Event evt = new Event
+                var evt = new Event
                 {
-                    Envelope = envelope,
-                    Header = CreateHeader(),
-                    Name = "_zpc_more",
-                    Args = new List<MessagePackObject> {newCapacity}
+                        Envelope = envelope,
+                        Header = CreateHeader(),
+                        Name = "_zpc_more",
+                        Args = new List<MessagePackObject> {newCapacity}
                 };
                 socket.Send(evt);
             }

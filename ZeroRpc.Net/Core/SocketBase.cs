@@ -38,10 +38,7 @@ namespace ZeroRpc.Net.Core
             Socket = socket;
             TimerPoller = new TimerPoller();
 
-            Poller = new NetMQPoller
-            {
-                    Socket
-            };
+            Poller = new NetMQPoller {Socket};
             Socket.ReceiveReady += ReceiveMessage;
 
             TimerPoller.Start();
@@ -73,19 +70,6 @@ namespace ZeroRpc.Net.Core
         private Dictionary<object, Channel> Channels { get; }
         private NetMQPoller Poller { get; }
 
-        /// <inheritdoc />
-        ~SocketBase()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        ///     Fired when an error occurs during work.
-        /// </summary>
-        public event EventHandler<ErrorArgs> Error;
-
-        internal event EventHandler<EventReceivedArgs> EventReceived;
-
         /// <summary>
         ///     Closes and disposes of the socket and any related resources.
         /// </summary>
@@ -94,6 +78,11 @@ namespace ZeroRpc.Net.Core
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        /// <summary>
+        ///     Fired when an error occurs during work.
+        /// </summary>
+        public event EventHandler<ErrorArgs> Error;
 
         /// <summary>
         ///     Terminates all active connections, sends out all remaining data and closes the socket.
@@ -111,7 +100,7 @@ namespace ZeroRpc.Net.Core
             TimerPoller.Stop();
             Poller.Stop();
             Socket.Close();
-            foreach (KeyValuePair<object, Channel> pair in Channels)
+            foreach (var pair in Channels)
                 pair.Value.Destroy();
             Channels.Clear();
             Closed = true;
@@ -142,13 +131,7 @@ namespace ZeroRpc.Net.Core
         /// <param name="info">Information about the error.</param>
         protected void RaiseError(ErrorInformation info)
         {
-            Error?.BeginInvoke(this,
-                               new ErrorArgs
-                               {
-                                       Info = info
-                               },
-                               null,
-                               null);
+            Error?.BeginInvoke(this, new ErrorArgs {Info = info}, null, null);
         }
 
         /// <summary>
@@ -163,14 +146,13 @@ namespace ZeroRpc.Net.Core
         }
 
         /// <summary>
-        /// Disposes of the socket.
+        ///     Disposes of the socket.
         /// </summary>
         /// <param name="disposing">Whether or not to manually dispose of other disposables.</param>
         protected virtual void Dispose(bool disposing)
         {
             ReleaseUnmanagedResources();
             if (disposing)
-            {
                 try
                 {
                     Socket.Dispose();
@@ -180,8 +162,9 @@ namespace ZeroRpc.Net.Core
                 {
                     // TODO: Maybe better disposal checking?
                 }
-            }
         }
+
+        internal event EventHandler<EventReceivedArgs> EventReceived;
 
         internal void Send(Event evt)
         {
@@ -220,7 +203,7 @@ namespace ZeroRpc.Net.Core
                 return;
             }
 
-            List<byte[]> envelope = message.Take(message.FrameCount - 2).Select(n => n.ToByteArray()).ToList();
+            var envelope = message.Take(message.FrameCount - 2).Select(n => n.ToByteArray()).ToList();
 
             Event evt;
 
@@ -237,18 +220,18 @@ namespace ZeroRpc.Net.Core
             if (evt.Header.ResponseTo != null && Channels.TryGetValue(evt.Header.ResponseTo, out Channel ch))
                 ch.ProcessAsync(evt);
             else
-                EventReceived?.BeginInvoke(this,
-                                           new EventReceivedArgs
-                                           {
-                                                   Event = evt
-                                           },
-                                           null,
-                                           null);
+                EventReceived?.BeginInvoke(this, new EventReceivedArgs {Event = evt}, null, null);
         }
 
         private void ReleaseUnmanagedResources()
         {
             Close(TimeSpan.Zero);
+        }
+
+        /// <inheritdoc />
+        ~SocketBase()
+        {
+            Dispose(false);
         }
     }
 }

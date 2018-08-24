@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using MsgPack;
 using NetMQ.Sockets;
 using ZeroRpc.Net.Core;
 using ZeroRpc.Net.Data;
@@ -33,7 +31,7 @@ namespace ZeroRpc.Net
         /// </summary>
         public static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
-        private TimeSpan timeout;
+        private readonly TimeSpan timeout;
 
         /// <summary>
         ///     Creates a new client with timeout set to <see cref="DefaultTimeout" /> and heartbeat rate set to
@@ -83,17 +81,18 @@ namespace ZeroRpc.Net
                 switch (name)
                 {
                     case "ERR":
-                        IList<MessagePackObject> data = args.Event.Args;
+                        var data = args.Event.Args;
                         if (data.Count != 3)
                         {
                             RaiseError("ProtocolError", "Invalid event: Bad error");
                             return;
                         }
+
                         callback?.BeginInvoke(new ErrorInformation(data[0].AsString(), data[1].AsString(), data[2].AsString()),
-                                             null,
-                                             false,
-                                             null,
-                                             null);
+                                              null,
+                                              false,
+                                              null,
+                                              null);
                         CloseChannel(ch);
                         break;
                     case "OK":
@@ -108,7 +107,11 @@ namespace ZeroRpc.Net
                         CloseChannel(ch);
                         break;
                     default:
-                        callback?.BeginInvoke(new ErrorInformation("ProtocolError", "Invalid event: unknown name"), null, false, null, null);
+                        callback?.BeginInvoke(new ErrorInformation("ProtocolError", "Invalid event: unknown name"),
+                                              null,
+                                              false,
+                                              null,
+                                              null);
                         CloseChannel(ch);
                         break;
                 }

@@ -12,12 +12,12 @@ namespace ZeroRpc.Net.Core
         {
             methods = new Dictionary<string, Action<Server, object[], Server.ReplyCallback>>
             {
-                {"_zerorpc_ping", (s, args, reply) => reply(null, new[] {"pong", s.Service.ServiceInfo.Name})},
-                {"_zerorpc_inspect", (s, args, reply) => reply(null, s.Service.ServiceInfo)},
-                {"_zerorpc_name", (s, args, reply) => reply(null, s.Service.ServiceInfo.Name)},
-                {"_zerorpc_list", (s, args, reply) => reply(null, s.Service.ServiceInfo.Methods.Select(p => p.Key).ToList())},
-                {"_zerorpc_help", (s, args, reply) => reply(null, s.Service.ServiceInfo.Methods[(string) args[0]].Documentation)},
-                {"_zerorpc_args", (s, args, reply) => reply(null, s.Service.ServiceInfo.Methods[(string) args[0]].Arguments)}
+                    {"_zerorpc_ping", (s, args, reply) => reply(null, new[] {"pong", s.Service.ServiceInfo.Name})},
+                    {"_zerorpc_inspect", (s, args, reply) => reply(null, s.Service.ServiceInfo)},
+                    {"_zerorpc_name", (s, args, reply) => reply(null, s.Service.ServiceInfo.Name)},
+                    {"_zerorpc_list", (s, args, reply) => reply(null, s.Service.ServiceInfo.Methods.Select(p => p.Key).ToList())},
+                    {"_zerorpc_help", (s, args, reply) => reply(null, s.Service.ServiceInfo.Methods[(string) args[0]].Documentation)},
+                    {"_zerorpc_args", (s, args, reply) => reply(null, s.Service.ServiceInfo.Methods[(string) args[0]].Arguments)}
             };
         }
 

@@ -17,16 +17,18 @@ namespace ZeroRpc.Net.Util
             serializer = MessagePackSerializer.Get<object[]>();
         }
 
-        public static IList<MessagePackObject> Serialize(object[] args) =>
-                serializer.ToMessagePackObject(args).AsList();
+        public static IList<MessagePackObject> Serialize(object[] args)
+        {
+            return serializer.ToMessagePackObject(args).AsList();
+        }
 
         public static NetMQMessage Serialize(Event evt)
         {
-            NetMQMessage message = new NetMQMessage();
+            var message = new NetMQMessage();
             object[] payload = {evt.Header, evt.Name, evt.Args};
 
             if (evt.Envelope != null)
-                foreach (byte[] frame in evt.Envelope)
+                foreach (var frame in evt.Envelope)
                     message.Append(frame);
 
             message.AppendEmptyFrame();
@@ -47,25 +49,21 @@ namespace ZeroRpc.Net.Util
             if (parts[1].AsString() == null)
                 throw new Exception("Bad name");
 
-            EventHeader headerObj = new EventHeader
+            var headerObj = new EventHeader
             {
                     Version = header["v"].AsInt32(),
                     MessageId = ProcessUuid(header, "message_id"),
                     ResponseTo = ProcessUuid(header, "response_to")
             };
 
-            Event msg = new Event
-            {
-                    Envelope = envelope,
-                    Header = headerObj,
-                    Name = parts[1].AsString(),
-                    Args = parts[2].AsList()
-            };
+            var msg = new Event {Envelope = envelope, Header = headerObj, Name = parts[1].AsString(), Args = parts[2].AsList()};
 
             return msg;
         }
 
-        private static object ProcessUuid(MessagePackObjectDictionary dic, string value) =>
-                !dic.TryGetValue(value, out MessagePackObject uuid) ? string.Empty : uuid.ToObject();
+        private static object ProcessUuid(MessagePackObjectDictionary dic, string value)
+        {
+            return !dic.TryGetValue(value, out MessagePackObject uuid) ? string.Empty : uuid.ToObject();
+        }
     }
 }

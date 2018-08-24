@@ -24,7 +24,7 @@ namespace ZeroRpc.Net
     }
 
     /// <summary>
-    /// A "raw" argument unpacker. Does not unpack anything; returns a <see cref="MessagePackObject" /> itself.
+    ///     A "raw" argument unpacker. Does not unpack anything; returns a <see cref="MessagePackObject" /> itself.
     /// </summary>
     public class RawArgumentUnpacker : IArgumentUnpacker
     {
@@ -52,9 +52,10 @@ namespace ZeroRpc.Net
         {
             if (obj.IsList)
             {
-                IList<MessagePackObject> list = obj.AsList();
+                var list = obj.AsList();
                 return this.Unpack(list);
             }
+
             if (obj.IsMap)
             {
                 MessagePackObjectDictionary map = obj.AsDictionary();
