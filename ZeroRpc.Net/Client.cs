@@ -33,6 +33,13 @@ namespace ZeroRpc.Net
         /// </summary>
         public static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
+        /// <summary>
+        /// The UUID generator function used when client generate a message (see CreateChannel). 
+        /// By default, the function used is ZeroRpc.Net.Util.UuidGen.ComputeUuid. 
+        /// But you can pass ZeroRpc.Net.Util.UuidGen.ComputeUuidByteArray or even your own function.
+        /// </summary>
+        public Func<object> UuidGenerator = new Func<object>(ZeroRpc.Net.Util.UuidGen.ComputeUuid);
+
         private TimeSpan timeout;
 
         /// <summary>
@@ -126,7 +133,7 @@ namespace ZeroRpc.Net
 
         internal override Channel CreateChannel(Event srcEvent)
         {
-            return new ClientChannel(this, CHANNEL_CAPACITY, HeartbeatInterval);
+            return new ClientChannel(UuidGenerator(), this, CHANNEL_CAPACITY, HeartbeatInterval);
         }
     }
 }

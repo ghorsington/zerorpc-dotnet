@@ -8,7 +8,7 @@ namespace ZeroRpc.Net.Core
     {
         private bool isFresh;
 
-        public ClientChannel(SocketBase socket, int capacity, TimeSpan hearbeatInterval) : base(UuidGen.ComputeUuid(),
+        public ClientChannel(object id, SocketBase socket, int capacity, TimeSpan hearbeatInterval) : base(id,
                                                                                                 null,
                                                                                                 socket,
                                                                                                 capacity,

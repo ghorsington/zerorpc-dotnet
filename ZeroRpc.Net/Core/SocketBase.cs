@@ -32,7 +32,7 @@ namespace ZeroRpc.Net.Core
         protected SocketBase(NetMQSocket socket, TimeSpan heartbeatInterval)
         {
             HeartbeatInterval = heartbeatInterval;
-            Channels = new Dictionary<object, Channel>();
+            Channels = new Dictionary<object, Channel>(new ChannelKeyComparer());
             Closed = false;
             Socket = socket;
             TimerPoller = new TimerPoller();
