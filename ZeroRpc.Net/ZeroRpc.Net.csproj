@@ -49,7 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\ChannelKeyComparer.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="MessageIdComparer.cs" />
     <Compile Include="Core\ClientChannel.cs" />
     <Compile Include="ArgumentUnpackers.cs" />
     <Compile Include="Core\BufferedQueue.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="Core\ServerChannel.cs" />
     <Compile Include="Data\ServiceInfo.cs" />
     <Compile Include="Core\TimerPoller.cs" />
-    <Compile Include="Util\UuidGen.cs" />
+    <Compile Include="UuidGenerator.cs" />
     <Compile Include="Core\SocketBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

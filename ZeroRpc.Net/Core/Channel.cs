@@ -6,7 +6,7 @@ using ZeroRpc.Net.Util;
 
 namespace ZeroRpc.Net.Core
 {
-    public enum ChannelState
+    internal enum ChannelState
     {
         Open,
         Closing,
@@ -148,7 +148,7 @@ namespace ZeroRpc.Net.Core
 
         protected virtual EventHeader CreateHeader()
         {
-            return new EventHeader {Version = PROTOCOL_VERSION, MessageId = UuidGen.ComputeUuid(), ResponseTo = Id};
+            return new EventHeader {Version = PROTOCOL_VERSION, MessageId = Config.UuidGenerator, ResponseTo = Id};
         }
 
         private void ProcessEvent(Event evt)
