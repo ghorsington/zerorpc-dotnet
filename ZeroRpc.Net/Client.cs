@@ -121,7 +121,10 @@ namespace ZeroRpc.Net
             ch.StartTimeoutWatch(timeout,
                                  () =>
                                  {
-                                     RaiseError("TimeoutExpired", $"Timeout after {timeout.TotalMilliseconds} ms");
+                                     string TimeoutErrorName = "TimeoutExpired";
+                                     string TimeoutErrorMessage = $"Timeout after {timeout.TotalMilliseconds} ms";
+                                     RaiseError(TimeoutErrorName, TimeoutErrorMessage);
+                                     callback?.BeginInvoke(new ErrorInformation(TimeoutErrorName, TimeoutErrorMessage), null, false, null, null);
                                      CloseChannel(ch);
                                  });
             ch.Send(method, parameters);
