@@ -49,11 +49,19 @@ namespace ZeroRpc.Net
         public Client() : this(DefaultTimeout, DefaultHeartbeat) { }
 
         /// <summary>
+        ///     Creates a new client using the default IequalityComparer for messages UUIDs.
+        /// </summary>
+        /// <param name="timeout">Time to wait after a method invokation before the connection is considered lost.</param>
+        /// <param name="heartbeatInterval">Intervals at wich the connection is tested between a server and a client.</param>
+        public Client(TimeSpan timeout, TimeSpan heartbeatInterval) : this(timeout, heartbeatInterval, null) { }
+
+        /// <summary>
         ///     Creates a new client.
         /// </summary>
         /// <param name="timeout">Time to wait after a method invokation before the connection is considered lost.</param>
         /// <param name="heartbeatInterval">Intervals at wich the connection is tested between a server and a client.</param>
-        public Client(TimeSpan timeout, TimeSpan heartbeatInterval) : base(new DealerSocket(), heartbeatInterval)
+        /// <param name="ChannelKeyComparison">The comparison object used to find the UUID stacked in the Channels dictionnary <see cref="SocketBase.Channels" />..</param>
+        public Client(TimeSpan timeout, TimeSpan heartbeatInterval, IEqualityComparer<object> ChannelKeyComparison) : base(new DealerSocket(), heartbeatInterval, ChannelKeyComparison)
         {
             this.timeout = timeout;
             ArgumentUnpacker = ArgumentUnpackers.Simple;

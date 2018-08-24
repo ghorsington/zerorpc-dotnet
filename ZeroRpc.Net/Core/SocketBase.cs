@@ -29,10 +29,14 @@ namespace ZeroRpc.Net.Core
         /// </summary>
         /// <param name="socket">The underlying ZeroMQ socket.</param>
         /// <param name="heartbeatInterval">Heartbeat interval.</param>
-        protected SocketBase(NetMQSocket socket, TimeSpan heartbeatInterval)
+        protected SocketBase(NetMQSocket socket, TimeSpan heartbeatInterval, IEqualityComparer<object> ChannelKeyComparison = null)
         {
             HeartbeatInterval = heartbeatInterval;
-            Channels = new Dictionary<object, Channel>(new ChannelKeyComparer());
+
+            if (ChannelKeyComparison == null)
+                ChannelKeyComparison = new ChannelKeyComparer();
+
+            Channels = new Dictionary<object, Channel>(ChannelKeyComparison);
             Closed = false;
             Socket = socket;
             TimerPoller = new TimerPoller();
