@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ChannelKeyComparer.cs" />
     <Compile Include="Core\ClientChannel.cs" />
     <Compile Include="ArgumentUnpackers.cs" />
     <Compile Include="Core\BufferedQueue.cs" />
