@@ -155,7 +155,7 @@ namespace ZeroRpc.Net.Core
 
         protected virtual EventHeader CreateHeader()
         {
-            return new EventHeader {Version = PROTOCOL_VERSION, MessageId = Config.UuidGenerator, ResponseTo = Id};
+            return new EventHeader {Version = PROTOCOL_VERSION, MessageId = Config.UuidGenerator(), ResponseTo = Id};
         }
 
         private void ProcessEvent(Event evt)
@@ -233,7 +233,7 @@ namespace ZeroRpc.Net.Core
                     };
                     socket.Send(evt);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     // If this ever happens, skip a heartbeat and let gracefully close itself
                 }
