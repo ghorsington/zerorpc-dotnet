@@ -25,17 +25,7 @@ namespace ZeroRpc.Net.Core
                         return xs == (string)y;
                     case byte[] xba:
                         byte[] yba = (byte[])y;
-                        if (xba.Length != yba.Length)
-                            return false;
-                        else
-                        {
-                            for (int i = 0; i < xba.Length; i++)
-                            {
-                                if (xba[i] != yba[i])
-                                    return false;
-                            }
-                            return true;
-                        }
+                        return xba.SequenceEqual(yba);
                     default:
                         throw new NotImplementedException(string.Format("Type {0} is not implemented in ChannelKeyComparer Equals method", x.GetType()));
                 }

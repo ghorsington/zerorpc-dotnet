@@ -38,7 +38,7 @@ namespace ZeroRpc.Net
         /// By default, the function used is ZeroRpc.Net.Util.UuidGen.ComputeUuid. 
         /// But you can pass ZeroRpc.Net.Util.UuidGen.ComputeUuidByteArray or even your own function.
         /// </summary>
-        public Func<object> UuidGenerator = new Func<object>(ZeroRpc.Net.Util.UuidGen.ComputeUuid);
+        public Func<object> UuidGenerator { get; set; } = new Func<object>(ZeroRpc.Net.Util.UuidGen.ComputeUuid);
 
         private TimeSpan timeout;
 
