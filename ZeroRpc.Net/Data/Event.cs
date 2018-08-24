@@ -3,7 +3,7 @@ using MsgPack;
 
 namespace ZeroRpc.Net.Data
 {
-    public class Event
+    internal class Event
     {
         public IList<MessagePackObject> Args { get; set; }
         public List<byte[]> Envelope { get; set; }

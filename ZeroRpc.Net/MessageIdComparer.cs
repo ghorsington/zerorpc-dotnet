@@ -4,8 +4,12 @@ using System.Linq;
 
 namespace ZeroRpc.Net
 {
+    /// <summary>
+    /// A basic message ID comparer that can compare both byte[] and string IDs.
+    /// </summary>
     public class MessageIdComparer : IEqualityComparer<object>
     {
+        /// <inheritdoc />
         public new bool Equals(object x, object y)
         {
             if (x == null && y == null)
@@ -26,6 +30,7 @@ namespace ZeroRpc.Net
             }
         }
 
+        /// <inheritdoc />
         public int GetHashCode(object obj)
         {
             switch (obj)

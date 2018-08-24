@@ -73,6 +73,7 @@ namespace ZeroRpc.Net.Core
         private Dictionary<object, Channel> Channels { get; }
         private NetMQPoller Poller { get; }
 
+        /// <inheritdoc />
         ~SocketBase()
         {
             Dispose(false);
@@ -161,6 +162,10 @@ namespace ZeroRpc.Net.Core
             RaiseError(new ErrorInformation(name, message, stack));
         }
 
+        /// <summary>
+        /// Disposes of the socket.
+        /// </summary>
+        /// <param name="disposing">Whether or not to manually dispose of other disposables.</param>
         protected virtual void Dispose(bool disposing)
         {
             ReleaseUnmanagedResources();

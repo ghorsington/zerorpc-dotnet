@@ -118,7 +118,7 @@ namespace ZeroRpc.Net.ServiceProviders
         /// <inheritdoc />
         public ServiceInfo ServiceInfo { get; }
 
-        protected virtual void AddMethod(MethodInfo methodInfo)
+        private void AddMethod(MethodInfo methodInfo)
         {
             if (methodInfo.ContainsGenericParameters)
                     // Currently don't support generic parameters to keep it simple for now

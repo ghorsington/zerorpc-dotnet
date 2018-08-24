@@ -2,7 +2,7 @@
 
 namespace ZeroRpc.Net.Data
 {
-    public class EventHeader
+    internal class EventHeader
     {
         [MessagePackMember(1, Name = "message_id")]
         public object MessageId { get; set; }

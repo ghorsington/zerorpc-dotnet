@@ -23,6 +23,9 @@ namespace ZeroRpc.Net
         public static readonly SimpleArgumentUnpacker Simple = new SimpleArgumentUnpacker();
     }
 
+    /// <summary>
+    /// A "raw" argument unpacker. Does not unpack anything; returns a <see cref="MessagePackObject" /> itself.
+    /// </summary>
     public class RawArgumentUnpacker : IArgumentUnpacker
     {
         internal RawArgumentUnpacker() { }
@@ -34,6 +37,12 @@ namespace ZeroRpc.Net
         }
     }
 
+    /// <summary>
+    ///     A simple argument unpacker that can unpack all primitive types.
+    ///     In addition, unpacks lists into arrays of primitives and object maps into
+    ///     string to object <see cref="Dictionary{TKey,TValue}" />.
+    ///     Objects in the lists and maps are unpacked recursively until the initial object is fully unpacket.
+    /// </summary>
     public class SimpleArgumentUnpacker : IArgumentUnpacker
     {
         internal SimpleArgumentUnpacker() { }

@@ -23,8 +23,14 @@ namespace ZeroRpc.Net.Core
         public Channel Channel { get; internal set; }
     }
 
+    /// <summary>
+    /// Error information.
+    /// </summary>
     public class ErrorArgs : EventArgs
     {
+        /// <summary>
+        /// Information about the error.
+        /// </summary>
         public ErrorInformation Info { get; internal set; }
     }
 
